@@ -6,5 +6,5 @@ import { Component } from '@angular/core';
   styleUrls: ['./app.component.css']
 })
 export class AppComponent {
-  title = 'pruebaGearElectricFrontend-LuisEduardoVillarreal';
+  title = 'Prueba de desarrollo Gear Electric - Luis Eduardo Villarreal Tobío';
 }
