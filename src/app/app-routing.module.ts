@@ -6,14 +6,10 @@ import { PrincipalComponent } from './Componentes/principal/principal.component'
 import { RegistrarDatosPersonalesComponent } from './Componentes/principal/registrar-datos-personales/registrar-datos-personales.component';
 
 const routes: Routes = [
-  { path: 'principal', 
-    component: PrincipalComponent,
-    children: [
-      { path: 'registrarclientes', component: RegistrarDatosPersonalesComponent },
-      { path: 'listarclientes', component: ListarClientesComponent },
-      { path: 'totalclientes', component: MostrarTotalClientesComponent }
-    ]
-  },
+  { path: 'principal', component: PrincipalComponent },
+  { path: 'registrarclientes', component: RegistrarDatosPersonalesComponent },
+  { path: 'listarclientes', component: ListarClientesComponent },
+  { path: 'totalclientes', component: MostrarTotalClientesComponent },
   { path: '',   redirectTo: '/principal', pathMatch: 'full' },
   { path: '**', component: PrincipalComponent }
 ];

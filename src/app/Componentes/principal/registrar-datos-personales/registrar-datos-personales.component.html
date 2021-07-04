@@ -1,1 +1,101 @@
-<p>registrar-datos-personales works!</p>
+<div class="container">
+    <div class="row">
+        <div class="col-sm-12">
+            <div class="card" style="margin-top: 5%;">
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <form>
+                                <div class="text-center">
+                                    <h3>REGISTRAR CLIENTE.</h3>
+                                </div>
+                                <hr>
+                                <div class="row">
+                                    <div class="form-group col-md-6">
+                                            <select class="form-select" id="tipodedocumento"
+                                                (change)="TipoDeDocumentoSeleccionado()" required>
+                                            <option value="">Seleccionar.</option>
+                                            <option value="Cedula de ciudadania">Cedula de ciudadanía.</option>
+                                            <option value="Cedula extranjera">Cedula extranjera.</option>
+                                            <option value="Pasaporte">Pasaporte</option>
+                                        </select>
+                                        <small id="tipodedocument" class="form-text text-muted">Seleccione el tipo de documento.</small>
+                                    </div>
+                                    <div class="form-group col-md-6">
+                                        <input type="number" class="form-control" id="numerodedocumento" aria-describedby="numerodedocument"
+                                        placeholder="Ej: 0123456789" name="Numerodedocumento" [(ngModel)]="Numerodedocumento" 
+                                        (keypress)="ValidarCaracteresNumericosYMaxLength('numerodedocumento', $event, 10)">
+                                        <small id="numerodedocument" class="form-text text-muted">Por favor, número de documento.</small>
+                                    </div>
+                                </div>
+                                <div class="row" style="margin-top: 3%;">
+                                    <div class="form-group col-md-12">
+                                        <input type="text" class="form-control" id="nombresyapellidos" aria-describedby="nombresyapellido" 
+                                        placeholder="Ej: Pedro Pepito Perez Perez" name="Nombresyapellidos" [(ngModel)]="Nombresyapellidos"
+                                        (keypress)="ValidarCaracteresAlfabeticosYMaxLength($event, 'nombresyapellidos', 100)">
+                                        <small id="nombresyapellido" class="form-text text-muted">Sus nombres y apellidos completos.</small>
+                                    </div>
+                                </div>
+                                <div class="row" style="margin-top: 3%;">
+                                    <div class="form-group col-md-6">
+                                        <input type="number" class="form-control" id="telefono" aria-describedby="telefon" placeholder="Ej: 3116229206 ó 5255555"
+                                        name="Telefono" [(ngModel)]="Telefono" (keypress)="ValidarCaracteresNumericosYMaxLength('telefono', $event, 10)">
+                                        <small id="telefon" class="form-text text-muted">Número de teléfono, celular o fijo.</small>
+                                    </div>
+                                    <div class="form-check col-md-6" style="margin-top: 1%;">
+                                        <input class="form-check-input" type="checkbox" value="" id="customswitch1" (click)="ActualizarEstadoDeRegistro()" checked>
+                                        <label class="form-check-label" for="customswitch1">{{Estado}}</label>
+                                    </div>
+                                </div>
+                                <div class="row" style="margin-top: 3%;">
+                                    <div class="form-group col-md-12">
+                                        <input type="email" class="form-control" id="email" aria-describedby="emai" placeholder="Ej: pedropepitoperez@algo.com"
+                                        name="Email" [(ngModel)]="Email" (keypress)="ValidarMaxLength($event, 'email', 100)">
+                                        <small id="emai" class="form-text text-muted">Digite una dirección de correo electrónico válida.</small>
+                                    </div>
+                                </div>
+                                <div class="row" style="margin-top: 3%;">
+                                    <div class="form-group col-md-12">
+                                        <button type="button" class="btn btn-primary button-block" (click)="ValidarParaRegistrar()">Registrar</button>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                        <div class="col-md-6 has-text-centered">
+                            <div class="text-center">
+                                <h3>CLIENTES.</h3>
+                            </div>
+                            <hr>
+                            <table class="table table-hover">
+                                <thead>
+                                  <tr>
+                                    <th scope="col">#</th>
+                                    <th scope="col">Nombres y apellidos</th>
+                                    <th scope="col">Número de teléfono</th>
+                                  </tr>
+                                </thead>
+                                <tbody>
+                                  <tr>
+                                    <th scope="row">1</th>
+                                    <td>Luis Eduardo Villarreal Tobío.</td>
+                                    <td>311 6229206.</td>
+                                  </tr>
+                                  <tr>
+                                    <th scope="row">1</th>
+                                    <td>Luis Eduardo Villarreal Tobío.</td>
+                                    <td>311 6229206.</td>
+                                  </tr>
+                                  <tr>
+                                    <th scope="row">1</th>
+                                    <td>Luis Eduardo Villarreal Tobío.</td>
+                                    <td>311 6229206.</td>
+                                  </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
