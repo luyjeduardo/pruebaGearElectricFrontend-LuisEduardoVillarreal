@@ -4,6 +4,8 @@ import Swal from 'sweetalert2';
 import { Cliente } from 'src/app/Entidades/cliente';
 import { RegistrardatospersonalesService } from 'src/app/Servicios/Registrar/registrardatospersonales.service';
 import { Validaciones } from '../Validaciones/validaciones';
+import { ToastrService } from 'ngx-toastr';
+import { ListarclientesService } from 'src/app/Servicios/Consultar/listarclientes.service';
 
 @Component({
   selector: 'app-registrar-datos-personales',
@@ -18,13 +20,17 @@ export class RegistrarDatosPersonalesComponent implements OnInit {
   public Telefono: any;
   public Email: any;
   public Estado: any = "Activo";
+  public Clientes: Cliente[] = [];
   private Singletonvalidaciones: Validaciones = Validaciones.ObtenerInstancia();
   private Cliente = Cliente.ObtenerInstancia();
 
-  constructor(private servicioderegistro: RegistrardatospersonalesService) { }
+  constructor(private servicioderegistro: RegistrardatospersonalesService,
+              private serviciodelistados: ListarclientesService,
+              private serviciodetoast: ToastrService) { }
 
   ngOnInit(): void {
     this.PrevenirPaste();
+    this.CargarClientes();
   }
 
   ValidarParaRegistrar() {
@@ -41,20 +47,21 @@ export class RegistrarDatosPersonalesComponent implements OnInit {
   }
 
   private RegistrarCliente() {
+    var response: any;
     this.servicioderegistro.RegistrarCliente(this.Cliente).subscribe(
       resultado => {
-        if (resultado.toString() === "success") {
-          // this.serviciodetoast.success(resultado['mensaje'].toString(), "REGISTRADO", {
-          //   "progressBar": true,
-          //   "progressAnimation": 'increasing',
-          //   "timeOut": 2500
-          // });
+        response = resultado;
+        console.log(resultado);
+        if (response["respuesta"] === "success") {
+          this.serviciodetoast.success(response["mensaje"].toString(), "REGISTRADO", {
+            "progressBar": true,
+            "progressAnimation": 'increasing',
+            "timeOut": 2500
+          });
           this.LimpiarInformacion();
           this.CargarClientes();
-        } else if (resultado.toString() === "error") {
-          // this.Mensajedecabeza = "ERROR";
-          // this.Mensajedecuerpo = resultado['mensaje'].toString();
-          // this.AbrirAlertaLabel("alert");
+        } else if (response["respuesta"] === "error") {
+          this.AlertasSwalError('ERROR', 'Ha ocurrido un error. (' + response["mensaje"] + ").");
         }
       }
     );
@@ -81,7 +88,6 @@ export class RegistrarDatosPersonalesComponent implements OnInit {
   }
 
   public EncapsularPropiedades() {
-    this.Cliente = new Cliente();
     this.Cliente.SetNombresYApellidos(this.Nombresyapellidos);
     this.Cliente.SetTipoDeDocumento(this.Tipodedocumento);
     this.Cliente.SetNumeroDeDocumento(this.Numerodedocumento);
@@ -101,7 +107,25 @@ export class RegistrarDatosPersonalesComponent implements OnInit {
   }
 
   private CargarClientes() {
-    alert("Hay que cargar los clientes.");
+    var response: any;
+    this.Clientes = [];
+    this.serviciodelistados.ConsultarLosClientes().subscribe(respuesta => {
+      response = respuesta;
+      if(response['respuesta'] === "success"){
+        response['clientes'].forEach((obj: { [x: string]: string; }) => {
+          var cliente = new Cliente();
+          cliente.SetTipoDeDocumento(obj['tipodedocumento']);
+          cliente.SetNumeroDeDocumento(obj['numerodedocumento']);
+          cliente.SetNombresYApellidos(obj['nombresyapellidos']);
+          cliente.SetTelefono(obj['telefono']);
+          cliente.SetEmail(obj['email']);
+          cliente.SetEstado(obj['estado']);
+          this.Clientes.push(cliente);
+        });
+      } else if(response['respuesta'] === "error"){
+         this.AlertasSwalError('¡ERROR!', response['mensaje']);
+      }
+    });
   }
 
   private PrevenirPaste(){

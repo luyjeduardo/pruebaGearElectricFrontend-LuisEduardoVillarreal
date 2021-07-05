@@ -63,10 +63,10 @@
                         </div>
                         <div class="col-md-6 has-text-centered">
                             <div class="text-center">
-                                <h3>CLIENTES.</h3>
+                                <h3>CLIENTES ACTIVOS.</h3>
                             </div>
                             <hr>
-                            <table class="table table-hover">
+                            <table class="table table-bordered">
                                 <thead>
                                   <tr>
                                     <th scope="col">#</th>
@@ -75,20 +75,10 @@
                                   </tr>
                                 </thead>
                                 <tbody>
-                                  <tr>
-                                    <th scope="row">1</th>
-                                    <td>Luis Eduardo Villarreal Tobío.</td>
-                                    <td>311 6229206.</td>
-                                  </tr>
-                                  <tr>
-                                    <th scope="row">1</th>
-                                    <td>Luis Eduardo Villarreal Tobío.</td>
-                                    <td>311 6229206.</td>
-                                  </tr>
-                                  <tr>
-                                    <th scope="row">1</th>
-                                    <td>Luis Eduardo Villarreal Tobío.</td>
-                                    <td>311 6229206.</td>
+                                  <tr *ngFor="let cliente of Clientes">
+                                    <th *ngIf="cliente.GetEstado() == 'activo'" scope="row">-</th>
+                                    <td *ngIf="cliente.GetEstado() == 'activo'" title="Cliente activo">{{cliente.GetNombresYApellidos()}}</td>
+                                    <td *ngIf="cliente.GetEstado() == 'activo'" title="Cliente activo">{{cliente.GetTelefono()}}</td>
                                   </tr>
                                 </tbody>
                             </table>

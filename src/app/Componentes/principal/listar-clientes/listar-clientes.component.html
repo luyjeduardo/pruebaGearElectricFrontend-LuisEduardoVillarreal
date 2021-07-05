@@ -1,1 +1,216 @@
-<p>listar-clientes works!</p>
+<div class="container">
+    <div class="row">
+        <div class="col-sm-12">
+            <div class="card" style="margin-top: 5%;">
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-12 has-text-centered">
+                            <div class="text-center">
+                                <h3>CLIENTES ACTIVOS E INACTIVOS.</h3>
+                            </div>
+                            <hr>
+                            <table class="table table-bordered">
+                                <thead>
+                                    <tr>
+                                        <th>Tipo de documento</th>
+                                        <th>Numero de documento</th>
+                                        <th>Nombres y apellidos</th>
+                                        <th>Correo electrónico</th>
+                                        <th>Teléfono</th>
+                                        <th>Estado</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr *ngFor="let cliente of Clientes" class="table-light">
+                                        <td [ngClass]="{'text-muted': cliente.GetEstado()=='inactivo'}">
+                                            {{cliente.GetTipoDeDocumento()}}</td>
+                                        <td [ngClass]="{'text-muted': cliente.GetEstado()=='inactivo'}">
+                                            {{cliente.GetNumeroDeDocumento()}}</td>
+                                        <td [ngClass]="{'text-muted': cliente.GetEstado()=='inactivo'}">
+                                            {{cliente.GetNombresYApellidos()}}</td>
+                                        <td [ngClass]="{'text-muted': cliente.GetEstado()=='inactivo'}">
+                                            {{cliente.GetEmail()}}</td>
+                                        <td [ngClass]="{'text-muted': cliente.GetEstado()=='inactivo'}">
+                                            {{cliente.GetTelefono()}}</td>
+                                        <td [ngClass]="{'text-muted': cliente.GetEstado()=='inactivo'}">
+                                            {{cliente.GetEstado()}}</td>
+                                        <td style="text-align: center;" class="table-primary">
+                                            <a title="Ver información de cliente"
+                                                (click)="AbrirModalModificarCliente(cliente, contenido, false)">
+                                                <span class="material-icons has-text-success">open_in_browser</span></a>
+                                        </td>
+                                        <td style="text-align: center;" class="table-warning">
+                                            <a title="Modificar cliente" (click)="AbrirModalModificarCliente(cliente, contenido, true)">
+                                                <span class="material-icons has-text-warning">cached</span></a>
+                                        </td>
+                                        <td *ngIf="cliente.GetEstado()!='inactivo'" style="text-align: center;"
+                                            class="table-danger">
+                                            <a title="Inhabilitar cliente" (click)="InhabilitarCliente(cliente)">
+                                                <span class="material-icons has-text-danger">error</span></a>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<ng-template #contenido let-modal>
+    <div class="modal-header">
+        <h3 class="modal-title text-center">INFORMACIÓN DE CLIENTE.</h3>
+        <button class="close btn btn-light" aria-label="close" type="button" (click)="serviciomodal.dismissAll()">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+    <div class="modal-body">
+        <div class="row">
+            <form>
+                <div class="row">
+                    <div class="form-group col-md-6">
+                            <select class="form-select" id="tipodedocumento"
+                                (change)="TipoDeDocumentoSeleccionado()">
+                            <option value="">Seleccionar</option>
+                            <option value="Cedula de ciudadania">Cedula de ciudadania</option>
+                            <option value="Cedula extranjera">Cedula extranjera</option>
+                            <option value="Pasaporte">Pasaporte</option>
+                        </select>
+                        <small id="tipodedocument" class="form-text text-muted">Seleccione el tipo de documento.</small>
+                    </div>
+                    <div class="form-group col-md-6">
+                        <input type="number" class="form-control" id="numerodedocumento" aria-describedby="numerodedocument"
+                        placeholder="Ej: 0123456789" name="Numerodedocumento" [(ngModel)]="Numerodedocumento" readonly 
+                        (keypress)="ValidarCaracteresNumericosYMaxLength('numerodedocumento', $event, 10)">
+                        <small id="numerodedocument" class="form-text text-muted">Por favor, número de documento.</small>
+                    </div>
+                </div>
+                <div class="row" style="margin-top: 3%;">
+                    <div class="form-group col-md-12">
+                        <input type="text" class="form-control" id="nombresyapellidos" aria-describedby="nombresyapellido" 
+                        placeholder="Ej: Pedro Pepito Perez Perez" name="Nombresyapellidos" [(ngModel)]="Nombresyapellidos"
+                        (keypress)="ValidarCaracteresAlfabeticosYMaxLength($event, 'nombresyapellidos', 100)">
+                        <small id="nombresyapellido" class="form-text text-muted">Sus nombres y apellidos completos.</small>
+                    </div>
+                </div>
+                <div class="row" style="margin-top: 3%;">
+                    <div class="form-group col-md-6">
+                        <input type="number" class="form-control" id="telefono" aria-describedby="telefon" placeholder="Ej: 3116229206 ó 5255555"
+                        name="Telefono" [(ngModel)]="Telefono" (keypress)="ValidarCaracteresNumericosYMaxLength('telefono', $event, 10)">
+                        <small id="telefon" class="form-text text-muted">Número de teléfono, celular o fijo.</small>
+                    </div>
+                    <div class="form-check col-md-6" style="margin-top: 1%;">
+                        <input class="form-check-input" type="checkbox" id="customswitch1" (click)="ActualizarEstadoDeRegistro()" checked>
+                        <label class="form-check-label" for="customswitch1">{{Estado}}</label>
+                    </div>
+                </div>
+                <div class="row" style="margin-top: 3%;">
+                    <div class="form-group col-md-12">
+                        <input type="email" class="form-control" id="email" aria-describedby="emai" placeholder="Ej: pedropepitoperez@algo.com"
+                        name="Email" [(ngModel)]="Email" (keypress)="ValidarMaxLength($event, 'email', 100)">
+                        <small id="emai" class="form-text text-muted">Digite una dirección de correo electrónico válida.</small>
+                    </div>
+                </div>
+                <div class="row" style="margin-top: 3%;">
+                    <div class="form-group col-md-8">
+                        <button id="modificar" type="button" class="btn btn-success button-block" (click)="ValidarParaModificar()">Modificar información</button>
+                    </div>
+                    <div class="form-group col-md-4">
+                        <button id="eliminar" type="button" class="btn btn-danger button-block" (click)="EliminarCliente()">Eliminar cliente</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+    <div class="modal-footer"></div>
+</ng-template>
+
+
+<!--<div class="modal-card">
+        <section class="modal-card-body">
+            <div class="row">
+                <div class="col-md-5">
+                    <img src="../../../../../assets/dashboard/images/user/usuario-usuarios.png"
+                        alt="user image" width="100%" height="100%" 
+                        style="margin-top: auto; margin-bottom: auto; display: block;"
+                        class="img-radius profile-img cust-img m-b-15"> 
+                    <div class="col-md-12 text-center" *ngIf="Estado=='inactivo'">
+                        <div class="custom-control custom-switch">
+                            <input type="checkbox" class="custom-control-input" id="customswitch2" (click)="ActualizarEstadoDeModificacion()">
+                            <label class="custom-control-label" for="customswitch2">{{Estadotemp}}</label>
+                        </div>
+                    </div> 
+                </div>
+                <div class="col-md-7">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <input class="mb-3 form-control" type="text" placeholder="Num. documento (*)" id="Numerodecedulatempmod" readonly
+                                style="background-color: white;" [(ngModel)]="Numerodecedulatempmod" name="Numerodecedulatempmod" (keypress)="ValidarCaracteresNumericosYMaxlength('Numerodecedulatempmod', $event)"> 
+                            <input class="mb-3 form-control" type="text" placeholder="Nombres (*)" id="Nombrestempmod" 
+                                [(ngModel)]="Nombrestempmod" name="Nombrestempmod" (keypress)="ValidarCaracteresAlfabeticosYMaxlength($event, 'Nombrestempmod')">
+                            <input class="mb-3 form-control" type="text" placeholder="Numero de celular" id="Numerodecelulartempmod"
+                                [(ngModel)]="Numerodecelulartempmod" name="Numerodecelulartempmod" (keypress)="ValidarCaracteresNumericosYMaxlength('Numerodecelulartempmod', $event)">
+                        </div>
+                        <div class="col-md-6">
+                            <input class="mb-3 form-control" type="text" [(ngModel)]="Codigodeusuariotempmod" readonly
+                                style="background-color: white;" name="Codigodeusuariotempmod">
+                            <input class="mb-3 form-control" type="text" placeholder="Apellidos (*)" id="Apellidostempmod" 
+                                [(ngModel)]="Apellidostempmod" name="Apellidostempmod" (keypress)="ValidarCaracteresAlfabeticosYMaxlength($event, 'Apellidostempmod')">
+                            <input class="mb-3 form-control" type="text" placeholder="Numero fijo" id="Numerofijotempmod"
+                                [(ngModel)]="Numerofijotempmod" name="Numerofijotempmod" (keypress)="ValidarCaracteresNumericosYMaxlength('Numerofijotempmod', $event)">
+                        </div>
+                        <div class="col-md-12">
+                            <input class="mb-3 form-control" type="text" placeholder="Correo electrónico (*)" id="Correotempmod"
+                                [(ngModel)]="Correotempmod" name="Correotempmod" (keypress)="ValidarCaracteresAlfanumericosYMaxlength($event)">
+                            <input class="mb-3 form-control" type="text" placeholder="Dirección de residencia (*)" id="Direcciontempmod"
+                                [(ngModel)]="Direcciontempmod" name="Direcciontempmod" (keypress)="ValidarMaxlength($event)">
+                        </div>
+                        <div class="col-md-12" id="divcamposdecontrasenia" hidden>
+                            <input class="mb-3 form-control" type="password" placeholder="Nueva contraseña (*)" name="Contraseniatempmod" [(ngModel)]="Contraseniatempmod">
+                            <input class="mb-3 form-control" type="password" placeholder="Confirme la nueva contraseña (*)" name="Contraseniatempconfmod" [(ngModel)]="Contraseniatempconfmod">
+                        </div>
+                    </div>         
+                </div>
+            </div>
+            <div>
+                <hr [ngStyle]="{'display': Display}">
+                <div id="alert2" class="alert" [ngStyle]="{'display': Display}">
+                    <span class="closebtn" (click)="CerrarAlertaLabel()">&times;</span> 
+                    {{Mensajedecuerpo}}.
+                </div>
+                <hr>
+                <div style="justify-content: center; display: flex;">
+                    <div style="margin-right: 2%;">
+                        <div style="justify-content: center; display: flex;">
+                            <button type="button" class="btn btn-icon btn-outline-success"
+                                (click)="ValidarParaModificar()" style="width: 30px; height: 30px;">
+                                <i class="feather icon-check-circle"></i>
+                            </button>
+                        </div>
+                        <label class="text-center" style="color: lightgreen;">Modificar</label>
+                    </div>
+                    <div>
+                        <div style="justify-content: center; display: flex;">
+                            <button type="button" class="btn btn-icon btn-outline-danger"
+                                (click)="CerrarModalModificarUsuario()" style="width: 30px; height: 30px;">
+                                <i class="feather icon-slash"></i>
+                            </button>
+                        </div>                                
+                        <label class="text-center" style="color: lightcoral;">Cancelar</label>
+                    </div>   
+                </div>
+            </div> 
+        </section>        
+        <footer class="modal-card-foot">
+            <div class="container">
+                <h5 style="float: right;">
+                    <a href="https://www.emdupar.gov.co" title="https://www.emdupar.gov.co" 
+                    style="color: dodgerblue;" class="text-center">
+                    Emdupar S.A. E.S.P.</a>
+                </h5>
+            </div>
+        </footer>
+    </div>
+</div> -->

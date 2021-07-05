@@ -6,13 +6,14 @@ import { Servidorapirest } from 'src/app/Entidades/servidor';
 @Injectable({
   providedIn: 'root'
 })
-export class ListarclientesService {
+export class EliminarclienteService {
 
   private UrlServidor = Servidorapirest.ObtenerInstancia();
-
+  
   constructor(private http: HttpClient) { }
 
-  public ConsultarLosClientes() : Observable<Object>{
-    return this.http.get(`${this.UrlServidor.GetUrlDelServicioAPIRest()}`);   
+  public EliminarCliente(numerodedocumento: string) : Observable<Object> { 
+    return this.http.delete(`${this.UrlServidor.GetUrlDelServicioAPIRest()}?numerodedocumento=${numerodedocumento}`); 
   }
+  
 }

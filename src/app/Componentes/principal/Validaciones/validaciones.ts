@@ -73,6 +73,17 @@ export class Validaciones {
         email.onpaste = function(e) { e.preventDefault(); }
     }
 
+    public PrevenirPaste_m(){
+        var nombresyapellidos = <HTMLElement>document.getElementById('nombresyapellidos_m');
+        var numerodedocumento = <HTMLElement>document.getElementById('numerodedocumento_m');
+        var telefono = <HTMLElement>document.getElementById('telefono_m');
+        var email = <HTMLElement>document.getElementById('email_m');
+        nombresyapellidos.onpaste = function(e) { e.preventDefault(); }
+        numerodedocumento.onpaste = function(e) { e.preventDefault(); }
+        telefono.onpaste = function(e) { e.preventDefault(); }
+        email.onpaste = function(e) { e.preventDefault(); }
+      }
+
     public ValidarEmail(email: string) : boolean {
         var bandera = false;
         var regexp = new RegExp(/^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/);
